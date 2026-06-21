@@ -1,5 +1,4 @@
 import axios from 'axios'
-import type { AxiosResponse } from 'axios'
 
 import type { Movie } from '../types/movie'
 
@@ -20,20 +19,17 @@ async function fetchMovieCollection(
   endpoint: string,
   query?: string,
 ): Promise<Movie[]> {
-  const response: AxiosResponse<FetchMoviesResponse> = await movieApi.get(
-    endpoint,
-    {
-      params: {
-        include_adult: false,
-        language: 'uk-UA',
-        page: 1,
-        ...(query ? { query } : {}),
-      },
-      headers: {
-        Authorization: getAuthorizationHeader(),
-      },
+  const response = await movieApi.get<FetchMoviesResponse>(endpoint, {
+    params: {
+      include_adult: false,
+      language: 'uk-UA',
+      page: 1,
+      ...(query ? { query } : {}),
     },
-  )
+    headers: {
+      Authorization: getAuthorizationHeader(),
+    },
+  })
 
   return response.data.results
 }
